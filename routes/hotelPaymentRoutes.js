@@ -11,7 +11,14 @@ import {
   cancelHotelBooking,
   initHotelPayment,
   getAllBookings,
+  totalSuccessfulBookings,
+  totalRefundedBookings,
+  totalCancelledBookings,
+  totalAmountOfSuccessfulBookings,
+  totalAmountOfRefundedBookings,
+  totalBookingPriceOfRefundedBookings,
 } from "../controller/hotelPaymentController.js";
+import { totalCancelledBooking, totalRefundedBooking, totalSuccessfulBooking } from "../controller/paymentController.js";
 
 const router = express.Router();
 
@@ -34,5 +41,12 @@ router.get("/verify/:tran_id", verifyHotelBooking);
 router.get("/customer/:customerId", getCustomerHotelBookings);
 router.put("/cancel/:tran_id", cancelHotelBooking);
 router.get("/orders", getAllBookings)
+
+router.get('/totalSuccessfulOrders', totalSuccessfulBookings)
+router.get('/totalRefundOrders', totalRefundedBookings)
+router.get('/totalCancelOrders', totalCancelledBookings)
+router.get('/totalAmountOfSuccessfulBookings', totalAmountOfSuccessfulBookings)
+router.get('/totalAmountOfRefundedBookings',totalAmountOfRefundedBookings)
+router.get('/totalBookingPriceOfRefundedBookings', totalBookingPriceOfRefundedBookings)
 
 export default router;

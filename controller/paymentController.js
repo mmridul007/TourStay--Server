@@ -503,11 +503,12 @@ export const totalRefundedBooking = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-}
+};
 export const totalCancelledBooking = async (req, res, next) => {
   try {
     const totalCancelled = await Booking.countDocuments({
-      status: "cancelled", refundAmount: {$eq: 0}
+      status: "cancelled",
+      refundAmount: { $eq: 0 },
     });
 
     res.status(200).json(totalCancelled);
@@ -534,7 +535,7 @@ export const totalAmountOfSuccessfulBooking = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-}
+};
 
 export const totalAmountOfRefundedBooking = async (req, res, next) => {
   try {
@@ -574,4 +575,4 @@ export const totalBookingPriceOfRefundedBooking = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-}
+};

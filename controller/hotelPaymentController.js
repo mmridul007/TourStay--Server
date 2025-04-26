@@ -418,11 +418,112 @@ export const cancelHotelBooking = async (req, res) => {
 };
 
 export const getAllBookings = async (req, res, next) => {
-  try{
-    const bookings = await HotelBooking.find()
+  try {
+    const bookings = await HotelBooking.find();
     res.status(200).json(bookings);
-  }catch(err){
+  } catch (err) {
     next(err);
   }
+};
 
-}
+export const totalSuccessfulBookings = async (req, res, next) => {
+  try {
+    const totalBookings = await HotelBooking.countDocuments({
+      paymentStatus: "completed",
+    });
+
+    res.status(200).json(totalBookings);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const totalRefundedBookings = async (req, res, next) => {
+  try {
+    const bookings = await HotelBooking.countDocuments({
+      paymentStatus: "refunded",
+    });
+    res.status(200).json(bookings);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const totalCancelledBookings = async (req, res, next) => {
+  try {
+    const bookings = await HotelBooking.countDocuments({
+      bookingStatus: "cancelled",
+      refundAmount: { $eq: 0 },
+    });
+    res.status(200).json(bookings);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const totalAmountOfSuccessfulBookings = async (req, res, next) => {
+  try {
+    const bookings = await HotelBooking.aggregate([
+      {
+        $match: { paymentStatus: "completed" },
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$totalPrice" },
+        },
+      },
+    ]);
+
+    
+    res.status(200).json(bookings[0].totalAmount);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const totalAmountOfRefundedBookings = async (req, res, next) => {
+  try {
+    const bookings = await HotelBooking.aggregate([
+      {
+        $match: {
+          paymentStatus: "refunded",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$refundAmount" },
+        },
+      },
+    ]);
+
+    
+    res.status(200).json(bookings[0].totalAmount);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const totalBookingPriceOfRefundedBookings = async (req, res, next) => {
+  try {
+    const bookings = await HotelBooking.aggregate([
+      {
+        $match: {
+          paymentStatus: "refunded",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$totalPrice" },
+        },
+      },
+    ]);
+
+    
+    res.status(200).json(bookings[0].totalAmount);
+  } catch (err) {
+    next(err);
+  }
+};

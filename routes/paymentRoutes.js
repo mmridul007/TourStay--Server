@@ -17,6 +17,8 @@ import {
   totalRefundedBooking,
   totalCancelledBooking,
   totalAmountOfSuccessfulBooking,
+  totalAmountOfRefundedBooking,
+  totalBookingPriceOfRefundedBooking,
 } from "../controller/paymentController.js";
 // Initialize SSLCommerz payment
 router.post("/sslcommerz/init", initPayment);
@@ -45,5 +47,6 @@ router.get('/totalSuccessfulOrders', totalSuccessfulBooking)
 router.get('/totalRefundedOrders', totalRefundedBooking)
 router.get('/totalCancelledOrders', totalCancelledBooking)
 router.get('/totalAmountOfSuccessfulOrders', totalAmountOfSuccessfulBooking)
-
+router.get('/totalAmountOfRefundedOrders', totalAmountOfRefundedBooking)
+router.get('/totalBookingPriceOfRefundedBooking', totalBookingPriceOfRefundedBooking)
 export default router;

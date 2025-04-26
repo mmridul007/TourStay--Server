@@ -545,7 +545,7 @@ export const totalAmountOfRefundedBooking = async (req, res, next) => {
       {
         $group: {
           _id: null,
-          totalAmount: { $sum: "$totalPrice" },
+          totalAmount: { $sum: "$refundAmount" },
         },
       },
     ]);
@@ -555,3 +555,23 @@ export const totalAmountOfRefundedBooking = async (req, res, next) => {
     next(err);
   }
 };
+
+export const totalBookingPriceOfRefundedBooking = async (req, res, next) => {
+  try {
+    const totalAmount = await Booking.aggregate([
+      {
+        $match: { paymentStatus: "refunded" },
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$totalPrice" },
+        },
+      },
+    ]);
+
+    res.status(200).json(totalAmount[0].totalAmount);
+  } catch (err) {
+    next(err);
+  }
+}

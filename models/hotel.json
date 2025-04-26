@@ -1,0 +1,13 @@
+
+{
+    "name": "Hotel Sunshine",
+    "type": "hotel",
+    "city": "New York",
+    "address": "123 Main St",
+    "distance": "2 miles",
+    "title": "A luxurious stay",
+    "desc": "Enjoy a luxurious stay at Hotel Sunshine with all modern amenities.",
+    "rating": 4.5,
+    "cheapestPrice": 150,
+    "featured": true
+}

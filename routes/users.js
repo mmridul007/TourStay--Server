@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteUser, getAllUsers, getPaymentRequestedUsers, getTotalUser, getUser, totalWithdrawalRequest, updateUser,} from '../controller/user.js';
+import { deleteUser, getAllUsers, getPaymentRequestedUsers, getTotalUser, getUser, totalNumbersOfAdmin, totalWithdrawalRequest, updateUser,} from '../controller/user.js';
 import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
 
 const router = express.Router();    // Create a new router 
@@ -18,6 +18,7 @@ const router = express.Router();    // Create a new router
 router.get("/payment-requested-users", getPaymentRequestedUsers);
 router.get('/totalUsers', getTotalUser)
 router.get('/totalWithdrawal-Requested', totalWithdrawalRequest)
+router.get('/totalAdmins', totalNumbersOfAdmin)
 // Update
 router.put("/:id",verifyUser, updateUser);
 // Delete

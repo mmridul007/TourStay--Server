@@ -94,3 +94,17 @@ export const totalWithdrawalRequest = async (req, res, next) => {
     next(err);
   }
 }
+
+export const totalNumbersOfAdmin = async (req, res, next) => {
+  try {
+    const totalNumbersOfAdmin = await Users.countDocuments({
+      isAdmin: "true",
+    });
+    if (totalNumbersOfAdmin === null) {
+      return res.status(404).json({ message: "There are no Users" });
+    }
+    res.status(200).json(totalNumbersOfAdmin);
+  } catch (err) {
+    next(err);
+  }
+}

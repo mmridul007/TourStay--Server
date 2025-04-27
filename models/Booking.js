@@ -63,12 +63,12 @@ const BookingSchema = new Schema(
     },
     paymentStatus: {
       type: String,
-      enum: ["pending", "completed", "failed", "refunded"],
+      enum: ["pending", "completed", "cancelled", "failed", "refunded"],
       default: "pending",
     },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "canceled", "completed"],
+      enum: ["pending", "confirmed", "cancelled", "completed"],
       default: "pending", // Change default to pending
     },
     bookingType: {

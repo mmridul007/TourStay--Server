@@ -19,6 +19,7 @@ import {
   totalAmountOfSuccessfulBooking,
   totalAmountOfRefundedBooking,
   totalBookingPriceOfRefundedBooking,
+  refundBooking,
 } from "../controller/paymentController.js";
 // Initialize SSLCommerz payment
 router.post("/sslcommerz/init", initPayment);
@@ -41,6 +42,7 @@ router.get("/verify/:tran_id", verify);
 router.get('/orderFor/:customerId', getBooking)
 router.get('/orderForOwner/:ownerId', getOwnerBooking)
 router.put('/cancelOrder/:id', cancelBooking)
+router.put('/refundOrder/:id', refundBooking)
 router.get('/orders', getAllBookings)
 router.get('/allRefunds', getAllRufundList)
 router.get('/totalSuccessfulOrders', totalSuccessfulBooking)

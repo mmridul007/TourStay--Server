@@ -390,51 +390,75 @@ export const getBooking = async (req, res, next) => {
 export const cancelBooking = async (req, res) => {
   try {
     const { id } = req.params;
-    const { refundAmount, refundStatus, paymentStatus } = req.body;
 
-    const updateData = {
-      status: "cancelled",
-      updatedAt: new Date(),
-    };
-
-    // If refund information is provided, add it to the update
-    if (refundAmount !== undefined && refundStatus) {
-      updateData.refundAmount = refundAmount;
-      updateData.refundStatus = refundStatus;
-
-      // Update payment status if refund is being processed
-      if (refundStatus === "refunded") {
-        updateData.paymentStatus = "refunded";
-        updateData.refundDate = new Date();
-      } else if (refundStatus === "processing") {
-        updateData.paymentStatus = "refunded";
-      } else if (refundStatus === "rejected") {
-        updateData.paymentStatus = "cancelled";
-      }
-    }
-
-    // If paymentStatus is explicitly provided, use it
-    if (paymentStatus) {
-      updateData.paymentStatus = paymentStatus;
-    }
-
-    const booking = await Booking.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
-
-    // console.log(booking)
-    const reduceAmount = booking.totalPrice - 30;
-    await Users.findByIdAndUpdate(booking.ownerId, {
-      $inc: { balance: -reduceAmount },
-    });
+    const booking = await Booking.findById(id);
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    res
-      .status(200)
-      .json({ message: "Booking cancelled successfully", booking });
+    // Step 1: Update booking status to cancelled
+    booking.status = "cancelled";
+    booking.updatedAt = new Date();
+    booking.paymentStatus = "cancelled";
+    await booking.save();
+
+    // Step 2: Reduce owner's balance by booking price
+    const owner = await Users.findById(booking.ownerId);
+    if (owner) {
+      const reduceAmount = booking.totalPrice - 30;
+      await Users.findByIdAndUpdate(booking.ownerId, {
+        $inc: { balance: -reduceAmount },
+      });
+    } else {
+      console.log("Owner not found");
+    }
+
+    // ✅ Step 3: After everything, send success response
+    res.status(200).json({
+      message: "Booking cancelled successfully",
+      booking,
+    });
+  } catch (err) {
+    console.error("Cancel booking error:", err); // <--- also good for debugging
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const refundBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { refundAmount } = req.body;
+
+    const booking = await Booking.findById(id);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    // Check if already refunded
+    if (booking.refundStatus === "refunded") {
+      return res.status(400).json({ message: "Booking already refunded" });
+    }
+
+    const refundValue = refundAmount || booking.totalPrice - 30; // Default refund amount
+
+    // Step 1: Update booking refund info
+    booking.refundAmount = refundValue;
+    booking.refundStatus = "refunded";
+    booking.paymentStatus = "refunded";
+    booking.refundDate = new Date();
+    await booking.save();
+
+    // Step 2: Add refunded amount to customer's balance
+    await Users.findByIdAndUpdate(booking.customerId, {
+      $inc: { balance: refundValue },
+    });
+
+    res.status(200).json({
+      message: "Booking refunded successfully",
+      booking,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

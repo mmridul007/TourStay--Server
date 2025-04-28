@@ -1,4 +1,5 @@
 import Hotels from "../models/Hotels.js";
+import Rooms from "../models/Rooms.js";
 import Room from "../models/Rooms.js";
 
 export const createHotel = async (req, res, next) => {
@@ -148,8 +149,67 @@ export const getHotelRooms = async (req, res, next) => {
 export const totalHotelCount = async (req, res, next) => {
   try {
     const totalCount = await Hotels.countDocuments();
-    res.status(200).json( totalCount );
+    res.status(200).json(totalCount);
   } catch (err) {
     next(err);
   }
-}
+};
+
+export const searchHotelsForChatBot = async (req, res) => {
+  try {
+    const { city, checkIn, checkOut, adults, children } = req.query;
+
+    if (!city || !checkIn || !checkOut || !adults) {
+      return res
+        .status(400)
+        .json({ message: "Missing required search parameters." });
+    }
+
+    // Find hotels by city
+    const hotels = await Hotels.find({
+      city: { $regex: new RegExp(city, "i") },
+      status: "active", // Only active hotels
+    });
+
+    const desiredCheckIn = new Date(checkIn);
+    const desiredCheckOut = new Date(checkOut);
+
+    const filteredHotels = [];
+
+    // For each hotel, check its rooms availability
+    for (const hotel of hotels) {
+      const roomIds = hotel.rooms;
+
+      // Load all rooms of the hotel
+      const rooms = await Rooms.find({ _id: { $in: roomIds } });
+
+      let hasAvailableRoom = false;
+
+      for (const room of rooms) {
+        for (const roomNumber of room.roomNumbers) {
+          const isAvailable = roomNumber.unavailableDates.every(
+            (bookedDate) => {
+              const booked = new Date(bookedDate);
+              return booked < desiredCheckIn || booked >= desiredCheckOut;
+            }
+          );
+
+          if (isAvailable) {
+            hasAvailableRoom = true;
+            break;
+          }
+        }
+        if (hasAvailableRoom) break;
+      }
+
+      if (hasAvailableRoom) {
+        filteredHotels.push(hotel);
+      }
+    }
+
+    res.status(200).json(filteredHotels);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong." });
+  }
+};

@@ -21,18 +21,52 @@ export const register = async (req, res, next) => {
   }
 };
 
+// export const login = async (req, res, next) => {
+//   try {
+//     const user = await User.findOne({ username: req.body.username });
+//     if (!user) return next(createError(404, "User not found"));
+
+//     const isPasswordCorrect = await bcrypt.compare(
+//       req.body.password,
+//       user.password
+//     );
+
+//     if (!isPasswordCorrect)
+//       return next(createError(400, "Wrong username or password!"));
+
+//     const token = jwt.sign(
+//       {
+//         id: user._id,
+//         isAdmin: user.isAdmin,
+//       },
+//       process.env.JWT_SECRET
+//     );
+
+//     const { password, isAdmin,  ...otherDetails } = user._doc;
+
+//     res
+//       .cookie("access-token", token, {
+//         httpOnly: true,
+//       })
+//       .status(200)
+//       .json({ details: { ...otherDetails }, isAdmin });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 export const login = async (req, res, next) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
+    const { identifier, password } = req.body; 
+
+    const user = await User.findOne({
+      $or: [{ username: identifier }, { email: identifier }],
+    });
     if (!user) return next(createError(404, "User not found"));
 
-    const isPasswordCorrect = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
-
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect)
-      return next(createError(400, "Wrong username or password!"));
+      return next(createError(400, "Wrong username/email or password!"));
 
     const token = jwt.sign(
       {
@@ -42,7 +76,7 @@ export const login = async (req, res, next) => {
       process.env.JWT_SECRET
     );
 
-    const { password, isAdmin, isVerified, ...otherDetails } = user._doc;
+    const { password: pwd, isAdmin, ...otherDetails } = user._doc;
 
     res
       .cookie("access-token", token, {

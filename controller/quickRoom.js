@@ -48,22 +48,22 @@ export const getQuickRooms = async (req, res, next) => {
   }
 };
 
-export const getQuickRoomById = async(req, res, next) =>{
-  try{
+export const getQuickRoomById = async (req, res, next) => {
+  try {
     // Check if ID is valid MongoDB ID
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({message: "Invalid room ID format"});
+      return res.status(400).json({ message: "Invalid room ID format" });
     }
-    
+
     const quickRoom = await QuickRooms.findById(req.params.id);
-    if(!quickRoom){
-      return res.status(404).json({message: "Room not found"});
+    if (!quickRoom) {
+      return res.status(404).json({ message: "Room not found" });
     }
     res.status(200).json(quickRoom);
-  }catch(err){
+  } catch (err) {
     next(err);
   }
-}
+};
 
 export const getQuickRoomByUserId = async (req, res, next) => {
   try {
@@ -103,8 +103,28 @@ export const getQuickRoomByCity = async (req, res, next) => {
 export const totalQuickRoomCount = async (req, res, next) => {
   try {
     const totalCount = await QuickRooms.countDocuments();
-    res.status(200).json(totalCount );
+    res.status(200).json(totalCount);
   } catch (err) {
     next(err);
   }
-}
+};
+
+export const searchQuickroomsForChatBot = async (req, res) => {
+  try {
+    const { city } = req.query;
+
+    if (!city) {
+      return res.status(400).json({ message: "City parameter is required." });
+    }
+
+    const quickrooms = await QuickRooms.find({
+      city: { $regex: new RegExp(city, "i") },
+      isAvailableForRent: true,
+    });
+
+    res.status(200).json(quickrooms);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong." });
+  }
+};

@@ -6,6 +6,7 @@ import {
   getQuickRoomById,
   getQuickRoomByUserId,
   getQuickRooms,
+  searchQuickroomsForChatBot,
   totalQuickRoomCount,
   updateQuickRoom,
 } from "../controller/quickRoom.js";
@@ -21,5 +22,6 @@ router.delete("/:id", deleteQuickRoom);
 router.get("/userID/:userID", getQuickRoomByUserId);
 router.get("/search/city", getQuickRoomByCity);
 router.get('/totalQuickrooms', totalQuickRoomCount)
+router.get('/searchforChat', searchQuickroomsForChatBot)
 
 export default router;

@@ -75,7 +75,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(4000, () => {
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
   connection();
   console.log("Server is running on port 4000");
 });

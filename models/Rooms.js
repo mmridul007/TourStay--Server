@@ -19,7 +19,6 @@
 //         required: true,
 //     },
 //     roomNumbers:[{number:Number, unavailableDates:{type: [Date]}}],
-    
 
 // }, {timestamps: true});
 
@@ -34,6 +33,10 @@ const roomNumberSchema = new mongoose.Schema({
 
 const roomSchema = new mongoose.Schema({
   title: { type: String, required: true },
+  hotelId: {
+    type: String,
+    required: true,
+  },
   price: Number,
   maxPeople: Number,
   desc: String,

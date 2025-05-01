@@ -24,7 +24,7 @@ const UserSchema = new Schema(
     img: {
       type: String,
       default:
-        "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg",
+        "https://wallpapers.com/images/hd/anonymous-profile-silhouette-b714qekh29tu1anb.jpg",
     },
     city: {
       type: String,
@@ -73,7 +73,7 @@ const UserSchema = new Schema(
     withdrawalHoldAmount: {
       type: Number,
       default: 0,
-    },    
+    },
   },
   { timestamps: true }
 );

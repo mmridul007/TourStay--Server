@@ -45,7 +45,7 @@ mongoose.connection.on("disconnected", () => {
 // Middleware
 app.use(
   cors({
-    origin: "https://tourstay.netlify.app/", // Allow frontend URL
+    // origin: "https://tourstay.netlify.app/", // Allow frontend URL
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type, Authorization",

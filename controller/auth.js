@@ -55,9 +55,10 @@ export const register = async (req, res, next) => {
 //   }
 // };
 
+
 export const login = async (req, res, next) => {
   try {
-    const { identifier, password } = req.body; 
+    const { identifier, password } = req.body;
 
     const user = await User.findOne({
       $or: [{ username: identifier }, { email: identifier }],
@@ -81,6 +82,9 @@ export const login = async (req, res, next) => {
     res
       .cookie("access-token", token, {
         httpOnly: true,
+        secure: true, // Required
+        sameSite: "None", // Required
+        maxAge: 7 * 24 * 60 * 60 * 1000, // Optional: 7 days
       })
       .status(200)
       .json({ details: { ...otherDetails }, isAdmin });

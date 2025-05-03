@@ -29,9 +29,9 @@ router.get("/totalUsers", getTotalUser);
 router.get("/totalWithdrawal-Requested", totalWithdrawalRequest);
 router.get("/totalAdmins", totalNumbersOfAdmin);
 // Update
-router.put("/:id", verifyUser, updateUser);
+router.put("/:id", updateUser);
 // Delete
-router.delete("/:id", verifyUser, deleteUser);
+router.delete("/:id", deleteUser);
 // Get
 router.get("/:id", getUser);
 // Get All

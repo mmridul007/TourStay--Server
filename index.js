@@ -45,7 +45,11 @@ mongoose.connection.on("disconnected", () => {
 // Middleware
 app.use(
   cors({
-    origin: ["https://tourstay.netlify.app", "http://localhost:3000"],
+    origin: [
+      "https://tourstay.netlify.app",
+      "http://localhost:3000",
+      "https://tourstay-admin.netlify.app",
+    ],
     credentials: true,
   })
 );

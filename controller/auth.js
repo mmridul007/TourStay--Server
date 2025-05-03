@@ -2,6 +2,7 @@ import User from "../models/Users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { createError } from "../utils/error.js";
+import Users from "../models/Users.js";
 const saltRounds = 10;
 
 export const register = async (req, res, next) => {
@@ -55,7 +56,6 @@ export const register = async (req, res, next) => {
 //   }
 // };
 
-
 export const login = async (req, res, next) => {
   try {
     const { identifier, password } = req.body;
@@ -88,6 +88,17 @@ export const login = async (req, res, next) => {
       })
       .status(200)
       .json({ details: { ...otherDetails }, isAdmin });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const meFunction = async (req, res, next) => {
+  try {
+    const user = await Users.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json(user);
   } catch (err) {
     next(err);
   }

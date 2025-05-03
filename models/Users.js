@@ -54,7 +54,7 @@ const UserSchema = new Schema(
     withdrawHistory: [
       {
         amount: { type: Number, default: 0 },
-        withdrawStatus: { type: String, default: "success" },
+        withdrawStatus: { type: String, default: "pending" },
         date: { type: Date, default: Date.now },
       },
     ],

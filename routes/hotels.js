@@ -17,11 +17,11 @@ import { verifyAdmin } from "../utils/verifyToken.js";
 const router = express.Router(); // Create a new router
 
 // Create
-router.post("/", verifyAdmin, createHotel);
+router.post("/", createHotel);
 // Update
 router.put("/:id", updateHotel);
 // Delete
-router.delete("/:id", verifyAdmin, deleteHotel);
+router.delete("/:id", deleteHotel);
 // Get
 router.get("/find/:id", getHotel);
 router.get("/totalHotels", totalHotelCount);

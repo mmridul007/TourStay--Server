@@ -98,10 +98,15 @@ export const login = async (req, res, next) => {
 
 export const meFunction = async (req, res, next) => {
   try {
-    const user = await Users.findById(req.user.id).select("-password");
+    const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.status(200).json(user);
+    const { password, ...otherDetails } = user._doc;
+
+    res.status(200).json({
+      details: { ...otherDetails },
+      isAdmin: user.isAdmin,
+    });
   } catch (err) {
     next(err);
   }

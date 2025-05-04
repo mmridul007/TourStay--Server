@@ -51,8 +51,14 @@ app.use(
       "https://tourstay-admin.netlify.app",
     ],
     credentials: true,
+    exposedHeaders: ["set-cookie"],
   })
 );
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", true);
+  next();
+});
+
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth", authRoutes);

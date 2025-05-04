@@ -7,8 +7,9 @@ const saltRounds = 10;
 
 export const register = async (req, res, next) => {
   try {
-    const salt = bcrypt.genSaltSync(saltRounds);
+    const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
+
     const newUser = new User({
       ...req.body,
       password: hash,
@@ -17,8 +18,10 @@ export const register = async (req, res, next) => {
     await newUser.save();
     res.status(200).send("User registered successfully");
   } catch (err) {
-    next(err);
-    console.log(next(err));
+    console.error("Registration error:", err);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: err.message });
   }
 };
 

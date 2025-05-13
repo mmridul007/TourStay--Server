@@ -7,6 +7,7 @@ import {
   featuredHotels,
   getAllHotels,
   getHotel,
+  getHotelByCity,
   getHotelRooms,
   searchHotelsForChatBot,
   totalHotelCount,
@@ -22,12 +23,14 @@ router.post("/", createHotel);
 router.put("/:id", updateHotel);
 // Delete
 router.delete("/:id", deleteHotel);
+
 // Get
 router.get("/find/:id", getHotel);
 router.get("/totalHotels", totalHotelCount);
 // Get All
 router.get("/", getAllHotels);
 router.get("/countByCity", countByCity);
+router.get("/byCity/:city", getHotelByCity)
 router.get("/countByType", countByType);
 router.get("/featuredHotel", featuredHotels);
 router.get("/room/:id", getHotelRooms);

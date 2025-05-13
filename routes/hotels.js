@@ -9,6 +9,7 @@ import {
   getHotel,
   getHotelByCity,
   getHotelRooms,
+  getHotelsByType,
   searchHotelsForChatBot,
   totalHotelCount,
   updateHotel,
@@ -31,6 +32,7 @@ router.get("/totalHotels", totalHotelCount);
 router.get("/", getAllHotels);
 router.get("/countByCity", countByCity);
 router.get("/byCity/:city", getHotelByCity)
+router.get("/getHotelByType", getHotelsByType)
 router.get("/countByType", countByType);
 router.get("/featuredHotel", featuredHotels);
 router.get("/room/:id", getHotelRooms);

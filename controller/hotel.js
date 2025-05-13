@@ -110,6 +110,26 @@ export const countByCity = async (req, res, next) => {
   }
 };
 
+export const getHotelsByType = async (req, res, next) => {
+  try {
+    const { type } = req.query;
+
+    if (!type) {
+      return res.status(400).json({ message: "Type parameter is required" });
+    }
+
+    // Create a case-insensitive regex pattern for the type
+    const typeRegex = new RegExp(`^${type}$`, "i");
+
+    const hotels = await Hotels.find({ type: typeRegex }).limit(15);
+
+    res.status(200).json(hotels);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Count hotels by type (existing controller)
 export const countByType = async (req, res, next) => {
   try {
     const hotelCount = await Hotels.countDocuments({
@@ -225,20 +245,20 @@ export const searchHotelsForChatBot = async (req, res) => {
   }
 };
 
-
-export const getHotelByCity = async (req, res, next ) =>{
+export const getHotelByCity = async (req, res, next) => {
   try {
     const city = req.params.city;
-    
+
     // Case insensitive search for the city
     const hotels = await Hotels.find({
-      city: { $regex: new RegExp(`^${city}$`, 'i') }
-    }).select('name address city cheapestPrice _id photos')
-    .sort({ cheapestPrice: 1 }); // Sort by price, lowest first
-    
+      city: { $regex: new RegExp(`^${city}$`, "i") },
+    })
+      .select("name address city cheapestPrice _id photos")
+      .sort({ cheapestPrice: 1 }); // Sort by price, lowest first
+
     res.status(200).json(hotels);
   } catch (err) {
     console.error("Error fetching hotels by city:", err);
     res.status(500).json({ message: "Failed to fetch hotels" });
   }
-}
+};
